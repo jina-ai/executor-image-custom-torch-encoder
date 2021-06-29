@@ -1,8 +1,8 @@
 manifest_version: 1
-name: my dummy executor
-alias: MyDummyExecutor
-description: This is my dummy executor
+name: CustomImageTorchEncoder
+alias: CustomImageTorchEncoder
+description: An encoder that encodes images using custom pretrained models
 author: Jina AI Dev-Team (dev-team@jina.ai)
-url: https://github.com/jina-ai/EXECUTOR_REPO_NAME
+url: https://github.com/jina-ai/executor-image-custom-torch-encoder
 avatar: https://avatars.githubusercontent.com/u/60539444?s=200&v=4
-keywords: [encoder, Numpy]
+keywords: [encoder, torch, CV, computer vision]
