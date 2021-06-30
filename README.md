@@ -146,7 +146,8 @@ f = Flow().add(uses='jinahub+docker://CustomImageTorchEncoder',
                 override_with={'model_state_dict_path': 'model_state_dict.pth',
                                'layer_name': 'conv1',
                                'model_definition_file': 'model.py',
-                               'model_class_name': 'CustomModel'})
+                               'model_class_name': 'CustomModel'},
+                volumes='.:/workspace')
 with f:
     resp = f.post(on='foo', inputs=Document(blob=np.random.rand(3, 224, 224)), return_results=True)
     assert resp[0].docs[0].embedding.shape == (10, )
