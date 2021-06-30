@@ -1,4 +1,4 @@
-jtype: MyDummyExecutor
+jtype: CustomImageTorchEncoder
 metas:
   py_modules:
-    - MODULE_NAME.py
+    - custom_image_torch_encoder.py
