@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-from typing import Optional, Dict, List, Any, Iterable
+from typing import Optional, Dict, List, Any, Iterable, Tuple
 
 import numpy as np
 import torch
@@ -12,11 +12,7 @@ import types
 
 from jina import Executor, requests, Document, DocumentArray
 from jina.excepts import PretrainedModelFileDoesNotExist
-
-
-def _batch_generator(data: List[Any], batch_size: int):
-    for i in range(0, len(data), batch_size):
-        yield data[i: i + batch_size]
+from jina_commons.batching import get_docs_batch_generator
 
 
 class CustomImageTorchEncoder(Executor):
@@ -45,7 +41,7 @@ class CustomImageTorchEncoder(Executor):
                  layer_name: Optional[str] = 'features',
                  device: Optional[str] = None,
                  default_batch_size: int = 32,
-                 default_traversal_paths: List[str] = ['r'],
+                 default_traversal_paths: Tuple = ('r', ),
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layer_name = layer_name
@@ -100,17 +96,13 @@ class CustomImageTorchEncoder(Executor):
         `self.default_batch_size`.
         """
         if docs:
-            document_batches_generator = self._get_input_data(docs, parameters)
+            document_batches_generator = get_docs_batch_generator(
+                docs,
+                traversal_path=parameters.get('traversal_paths', self.default_traversal_paths),
+                batch_size=parameters.get('batch_size', self.default_batch_size),
+                needs_attr='blob'
+            )
             self._create_embeddings(document_batches_generator)
-
-    def _get_input_data(self, docs: DocumentArray, parameters: dict):
-        trav_paths = parameters.get('traversal_paths', self.default_traversal_paths)
-        batch_size = parameters.get('batch_size', self.default_batch_size)
-        # traverse thought all documents which have to be processed
-        flat_docs = docs.traverse_flat(trav_paths)
-        # filter out documents without images
-        filtered_docs = [doc for doc in flat_docs if doc.blob is not None]
-        return _batch_generator(filtered_docs, batch_size)
 
     def _create_embeddings(self, document_batches_generator: Iterable):
         with torch.no_grad():
