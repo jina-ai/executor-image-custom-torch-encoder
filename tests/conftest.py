@@ -16,5 +16,5 @@ def create_model_weights():
 
     yield
 
-    if path_to_model:
+    if os.path.exists(path_to_model):
         os.remove(path_to_model)
