@@ -2,7 +2,7 @@ __copyright__ = "Copyright (c) 2021 Jina AI Limited. All rights reserved."
 __license__ = "Apache-2.0"
 
 import os
-from typing import Optional, Dict, List, Any, Iterable
+from typing import Optional, Dict, List, Any, Iterable, Tuple
 
 import numpy as np
 import torch
@@ -41,7 +41,7 @@ class CustomImageTorchEncoder(Executor):
                  layer_name: Optional[str] = 'features',
                  device: Optional[str] = None,
                  default_batch_size: int = 32,
-                 default_traversal_paths: Optional[List[str]] = None,
+                 default_traversal_paths: Tuple = ('r', ),
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.layer_name = layer_name
@@ -49,7 +49,7 @@ class CustomImageTorchEncoder(Executor):
             device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.device = device
         self.default_batch_size = default_batch_size
-        self.default_traversal_paths = default_traversal_paths or ['r']
+        self.default_traversal_paths = default_traversal_paths
         self.model_state_dict_path = model_state_dict_path
         self.model_definition_file = model_definition_file
         self.model_class_name = model_class_name
