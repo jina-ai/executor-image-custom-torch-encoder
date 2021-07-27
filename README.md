@@ -1,3 +1,5 @@
+MOVED TO https://github.com/jina-ai/executors/tree/main/jinahub/encoders/image/CustomImageTorchEncoder
+
 # ✨ CustomImageTorchEncoder
 
 **CustomImageTorchEncoder** is a class that uses any custom pretrained model provided to extract embeddings for `Documents` containing images as `blob`.
